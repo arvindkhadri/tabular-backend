@@ -19,7 +19,12 @@ app.post("/query", async (req, res) => {
     const parser = new RequestParser(request);
     const output = parser.parse();
     let queryResponse;
-    const client = new Client({ connectionString: process.env.DATABASE_URL });
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
     await client.connect();
     try {
       queryResponse = await client.query(output);
@@ -37,7 +42,12 @@ app.post("/query", async (req, res) => {
 });
 
 app.get("/schema", async (req, res) => {
-  const client = new Client({ connectionString: process.env.DATABASE_URL });
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
   await client.connect();
   const response = await client.query(`
     SELECT *
